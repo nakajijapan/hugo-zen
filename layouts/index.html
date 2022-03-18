@@ -1,12 +1,42 @@
 {{ partial "header.html" . }}
 
-	<main role="main">
-{{ range (where .Data.Pages ".Params.hidefromhome" "!=" "true") }}
-		<article itemscope itemtype="http://schema.org/Blog">
-			<h2 class="entry-title" itemprop="headline"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
-			<span class="entry-meta"><time itemprop="datePublished" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 02, 2006" }}</time></span>
-		</article>
-{{ end }}
-	</main>
 
-{{ partial "footer.html" . }}
+{{ $paginator := .Paginate (where .Site.Pages "Type" "post") }}
+<main role="main">
+	{{ range $paginator.Pages }}
+
+	{{ if (eq .Title "Posts") }}
+	{{ return }}
+	{{ else }}
+		<article itemscope itemtype="http://schema.org/Blog">
+			<h2 class="entry-title" itemprop="headline"><a href="{{ .RelPermalink }}">{{ .Title }}{{ if .Draft }} #Draft{{ end }}</a></h2>
+			<span class="entry-categories">{{ with .Params.categories }}( <a href="/categories/{{ . | urlize }}">{{ . }}</a> ){{ end }}</span>
+
+			<span class="entry-meta">
+				<time itemprop="datePublished" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 02, 2006" }}</time>
+			</span>
+		</article>
+		{{ end }}
+	{{ end }}
+
+	<div class="pagination">
+		{{ if $paginator.HasNext }}
+		<a class="pagination-item older" href="{{ $paginator.Next.URL }}">Older</a>
+		{{ else }}
+		<span class="pagination-item older">Older</span>
+		{{ end }}
+
+		{{ if $paginator.HasPrev }}
+		<a class="pagination-item newer" href="{{ $paginator.Prev.URL }}">Newer</a>
+		{{ else }}
+		<span class="pagination-item newer">Newer</span>
+		{{ end }}
+	</div>
+
+	<ul class="cloud">{{ $plural := .Data.Plural }}
+	{{ range $key, $value := .Data.Terms }}
+		<li><a href="/{{ $plural }}/{{ $key | urlize }}">{{ $key }}</a> ({{ len $value }})</li>
+	{{ end }}
+	</ul>
+
+</main>

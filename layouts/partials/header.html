@@ -2,23 +2,51 @@
 <html lang="{{ with .Site.LanguageCode }}{{ . }}{{ else }}en-US{{ end }}">
 <head>
 <meta charset="utf-8">
-{{ .Hugo.Generator }}
+{{ hugo.Generator }}
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta property="og:title" content="{{ .Title }}">
+<meta property="og:type" content="website" />
+<meta property="og:url" content="{{ .Permalink }}" />
+<meta property="go:description" content="{{ .Summary }}" />
+<meta property="og:site_name" content="{{ .Site.Title }}"/>
+
+{{ if .Params.image }}
+<meta property="og:image" content="{{ $.Site.BaseURL }}{{ .Params.image }}" />
+{{ else }}
+<meta property="og:image" content="{{ $.Site.BaseURL }}images/meta_logo.jpg" />
+{{ end }}
+<meta name="twitter:card" content="nakajijapan">
+<meta name="twitter:site" content="@nakajijapan">
+<meta name="twitter:card"  content="summary_large_image" />
+<meta name="twitter:title" content="{{ .Title }}" />
+<meta name="twitter:description" content="{{ .Summary }}" />
+
 <link href="//fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
 <link rel="stylesheet" href="/css/normalize.css">
 <link rel="stylesheet" href="/css/skeleton.css">
 <link rel="stylesheet" href="/css/custom.css">
-<link rel="alternate" href="/index.xml" type="application/rss+xml" title="{{ .Site.Title }}">
+<link rel="alternate" href="/feed.xml" type="application/rss+xml" title="{{ .Site.Title }}">
+
 <title>{{ $isHomePage := eq .Title .Site.Title }}{{ .Title }}{{ if eq $isHomePage false }} - {{ .Site.Title }}{{ end }}</title>
 </head>
 <body>
 
-<div class="container">
-
 	<header role="banner">
+		<div class="header-image">
 		<div class="header-logo">
 			<a href="/"><img src="{{ .Site.Params.logo }}" width="60" height="60" alt="{{ .Site.Title }}"></a>
 		</div>
-		{{ if eq $isHomePage true }}<h1 class="site-title">{{ .Site.Title }}</h1>{{ end }}
+		{{ if eq $isHomePage true }}
+			<h1 class="site-title">{{ .Site.Title }}</h1>
+			<h2 class="site-sub-title">The old man</h2>
+		{{ end }}
+
+		<div class="header-menu">
+			<a href="/">Home</a> / <a href="/about">About</a>
+		</div>
+		</div>
 	</header>
+
+<div class="container">
